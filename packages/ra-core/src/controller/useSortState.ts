@@ -7,7 +7,8 @@ import {
 import { Sort } from '../types';
 
 interface SortProps {
-    setSort: (field: string) => void;
+    setSortField: (field: string) => void;
+    setSort: (sort: Sort) => void;
     sort: Sort;
 }
 
@@ -64,7 +65,8 @@ export default (
     }, [initialSort.field, initialSort.order]);
 
     return {
-        setSort: (field: string) => dispatch(field),
+        setSort: (sortValue: Sort) => dispatch(sortValue),
+        setSortField: (field: string) => dispatch(field),
         sort,
     };
 };
