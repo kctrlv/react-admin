@@ -76,7 +76,7 @@ export const useReference = ({
         if (sourceId !== null && typeof sourceId !== 'undefined') {
             dispatch(crudGetManyAccumulate(reference, [sourceId]));
         }
-    }, [sourceId, reference]);
+    }, [sourceId, reference]); // eslint-disable-line react-hooks/exhaustive-deps
     const rootPath = basePath.replace(resource, reference);
     const resourceLinkPath = !linkType
         ? false
