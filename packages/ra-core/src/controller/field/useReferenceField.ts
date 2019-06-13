@@ -1,19 +1,16 @@
-import { useEffect } from 'react';
-// @ts-ignore
-import { useDispatch, useSelector } from 'react-redux';
 import get from 'lodash/get';
 
-import { crudGetManyAccumulate } from '../../actions';
 import { linkToRecord } from '../../util';
-import { Record, ReduxState } from '../../types';
+import { Record } from '../../types';
+import useReference from '../useReference';
 
 interface Option {
     allowEmpty?: boolean;
     basePath: string;
     record?: Record;
+    source: string;
     reference: string;
     resource: string;
-    source: string;
     linkType: string | boolean;
 }
 
@@ -58,39 +55,31 @@ export interface UseReferenceProps {
  *
  * @returns {ReferenceProps} The reference props
  */
-export const useReference = ({
+export const useReferenceField = ({
     allowEmpty = false,
     basePath,
     linkType = 'edit',
-    record = { id: '' },
     reference,
+    record = { id: '' },
     resource,
     source,
 }: Option): UseReferenceProps => {
     const sourceId = get(record, source);
-    const referenceRecord = useSelector(
-        getReferenceRecord(sourceId, reference)
-    );
-    const dispatch = useDispatch();
-    useEffect(() => {
-        if (sourceId !== null && typeof sourceId !== 'undefined') {
-            dispatch(crudGetManyAccumulate(reference, [sourceId]));
-        }
-    }, [sourceId, reference]);
+    const { referenceRecord, isLoading } = useReference({
+        id: sourceId,
+        reference,
+        allowEmpty,
+    });
     const rootPath = basePath.replace(resource, reference);
     const resourceLinkPath = !linkType
         ? false
         : linkToRecord(rootPath, sourceId, linkType as string);
 
     return {
-        isLoading: !referenceRecord && !allowEmpty,
+        isLoading,
         referenceRecord,
         resourceLinkPath,
     };
 };
 
-const getReferenceRecord = (sourceId, reference) => (state: ReduxState) =>
-    state.admin.resources[reference] &&
-    state.admin.resources[reference].data[sourceId];
-
-export default useReference;
+export default useReferenceField;

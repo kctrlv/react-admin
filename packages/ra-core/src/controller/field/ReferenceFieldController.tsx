@@ -1,7 +1,6 @@
 import { FunctionComponent, ReactNode, ReactElement } from 'react';
 import { Record } from '../../types';
-import useReference, { UseReferenceProps } from './useReference';
-
+import useReferenceField, { UseReferenceProps } from './useReferenceField';
 
 interface Props {
     allowEmpty?: boolean;
@@ -47,7 +46,7 @@ export const ReferenceFieldController: FunctionComponent<Props> = ({
     children,
     ...props
 }) => {
-    return children(useReference(props)) as ReactElement<any>;
+    return children(useReferenceField(props)) as ReactElement<any>;
 };
 
 export default ReferenceFieldController;
